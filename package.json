@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@metamask/providers": "^14.0.2",
+    "@openzeppelin/contracts": "^5.0.1",
     "@radix-ui/react-navigation-menu": "^1.1.4",
     "@radix-ui/react-slot": "^1.0.2",
     "@reduxjs/toolkit": "^2.0.1",
+    "@web5/api": "^0.8.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "ethers": "^6.9.1",

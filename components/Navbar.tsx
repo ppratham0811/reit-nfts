@@ -1,100 +1,92 @@
 "use client";
-import * as React from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+import { ethers } from "ethers";
+import { MetaMaskInpageProvider } from "@metamask/providers";
+import { WalletContext, useWalletContext } from "@/lib/context/WalletContext";
 
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-  {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-  },
-];
+declare global {
+  interface Window {
+    ethereum: MetaMaskInpageProvider;
+  }
+}
 
 function Navbar() {
-  const router = useRouter();
+  // const etherProviders = new ethers.BrowserProvider(window.ethereum);
+  const { walletAddress, setWalletAddress } = useWalletContext();
+
+  useEffect(() => {
+    const connectedWallet = localStorage.getItem("walletAddress") || "";
+    setWalletAddress(connectedWallet);
+    console.log(walletAddress);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [walletAddress]);
+
+  // const getAllAccounts = async () => {
+  //   const res = await window.ethereum.request({ method: "eth_accounts" });
+  //   return res;
+  // };
+
+  const connectWallet = async () => {
+    // const allConnectedAccounts = await getAllAccounts();
+    if (!walletAddress) {
+      await window.ethereum
+        .request({ method: "eth_requestAccounts" })
+        .then((accounts) => {
+          if (Array.isArray(accounts) && accounts.length > 0) {
+            setWalletAddress(accounts[0]);
+            localStorage.setItem("walletAddress", accounts[0]);
+          }
+        });
+    }
+  };
 
   return (
-    <nav>
-      <div className="flex justify-between p-6 bg-secondary">
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger className="bg-card text-white hover:bg-white hover:text-black transition duration-500 ease-in rounded-lg">
-                Getting started
-              </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                  <li className="row-span-3">
-                    <NavigationMenuLink asChild>
-                      <a
-                        className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                        href="/"
-                      >
-                        <div className="mb-2 mt-4 text-lg font-medium">
-                          shadcn/ui
-                        </div>
-                        <p className="text-sm leading-tight text-muted-foreground">
-                          Beautifully designed components built with Radix UI
-                          and Tailwind CSS.
-                        </p>
-                      </a>
-                    </NavigationMenuLink>
-                  </li>
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-        <Button
-          className="bg-card text-white hover:bg-white hover:text-black transition duration-500 ease-in-out"
-          onClick={() => router.push("/login")}
-        >
-          Login
-        </Button>
-      </div>
-    </nav>
+    <div className="w-full text-white">
+      <nav className="relative py-4 px-8 flex flex-wrap items-center justify-between mx-auto lg:justify-between">
+        <div className="flex flex-wrap items-center justify-between w-full lg:w-auto">
+          <a href="/">
+            <span className="overflow-hidden box-border inline-block opacity-100 relative max-w-[100%]">
+              <span className="box-border block max-w-[100%]">NFT-REN</span>
+            </span>
+          </a>
+        </div>
+        <div className="hidden text-center lg:flex lg:items-center">
+          <ul className="items-center justify-end flex-1 pt-6 lg:pt-0 list-reset lg:flex">
+            <div>
+              <a
+                className=" rounded-md text-sm font-medium outline-none hover:text-cyan-500 focus:text-cyan-500 transition-all focus:bg-primary-dark focus:outline-none inline-block px-6 py-2"
+                href="/"
+              >
+                Home
+              </a>
+            </div>
+            <div>
+              <a
+                className="rounded-md text-sm font-medium outline-none hover:text-cyan-500 focus:text-cyan-500 transition-all focus:bg-primary-dark focus:outline-none inline-block px-6 py-2"
+                href="/listing"
+              >
+                Listing
+              </a>
+            </div>
+            <div className="ml-5">
+              {walletAddress ? (
+                <span className="px-5 py-2 text-sm font-medium rounded-full text-cyan-600 bg-cyan-100">
+                  {walletAddress}
+                </span>
+              ) : (
+                <Button
+                  onClick={connectWallet}
+                  className="px-5 py-2 text-sm font-medium bg-white rounded-full text-cyan-600"
+                >
+                  Connect Wallet
+                </Button>
+              )}
+            </div>
+          </ul>
+        </div>
+      </nav>
+    </div>
   );
 }
 

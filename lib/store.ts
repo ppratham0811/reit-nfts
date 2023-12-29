@@ -1,13 +1,13 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import walletReducer from "@/lib/features/walletSlice";
 
-const rootReducers = combineReducers({
+export const rootReducer = combineReducers({
   wallet: walletReducer,
 });
 
 export const makeStore = () => {
   return configureStore({
-    reducer: rootReducers,
+    reducer: rootReducer,
   });
 };
 
