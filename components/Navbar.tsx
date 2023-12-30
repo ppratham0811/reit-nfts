@@ -56,17 +56,25 @@ function Navbar() {
             <div>
               <a
                 className=" rounded-md text-sm font-medium outline-none hover:text-cyan-500 focus:text-cyan-500 transition-all focus:bg-primary-dark focus:outline-none inline-block px-6 py-2"
-                href="/"
+                href="/create"
               >
-                Home
+                Create
               </a>
             </div>
             <div>
               <a
                 className="rounded-md text-sm font-medium outline-none hover:text-cyan-500 focus:text-cyan-500 transition-all focus:bg-primary-dark focus:outline-none inline-block px-6 py-2"
-                href="/listing"
+                href="/listings"
               >
                 Listing
+              </a>
+            </div>
+            <div>
+              <a
+                className="rounded-md text-sm font-medium outline-none hover:text-cyan-500 focus:text-cyan-500 transition-all focus:bg-primary-dark focus:outline-none inline-block px-6 py-2"
+                href="/about"
+              >
+                About
               </a>
             </div>
             <div className="ml-5">

@@ -3,8 +3,20 @@
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import { Button } from "./ui/button";
+import { useEffect } from "react";
+import { Web5 } from "@web5/api";
 
 const HomeScreen = () => {
+  async function createUserDID() {
+    const { web5, did: userDid } = await Web5.connect();
+
+    console.log(web5, userDid);
+  }
+
+  useEffect(() => {
+    createUserDID();
+  }, []);
+
   return (
     <main>
       <Image
@@ -20,11 +32,10 @@ const HomeScreen = () => {
         <div className="grid grid-cols-1 mt-10">
           <div className="text-center">
             <h1 className="font-bold text-white lg:leading-normal leading-normal text-4xl lg:text-5xl mb-6">
-              Easy way to find your <br /> dream property
+              Easy way to invest in your <br /> dream property
             </h1>
             <p className="text-white/70 text-xl max-w-xl mx-auto">
-              A great plateform to buy, sell and rent your properties without
-              any agent or commisions.
+              A great platform to buy or sell properties via NFTs
             </p>
           </div>
         </div>
@@ -33,13 +44,13 @@ const HomeScreen = () => {
       <div className="flex flex-col justify-center items-center mt-4 font-bold w-full">
         <div>
           <Button className="my-10 py-6 px-6 text-2xl rounded-full bg-white text-accent text-cyan-600 hover:bg-background hover:text-white">
-            List Property as NFT
+            <a href="/create">List Property as NFT</a>
           </Button>
         </div>
 
         <div>
           <Button className="py-6 px-6 text-2xl rounded-full bg-white text-accent text-cyan-600 hover:bg-background hover:text-white">
-            Explore Listings
+            <a href="/listings">Explore Listings</a>
           </Button>
         </div>
       </div>
