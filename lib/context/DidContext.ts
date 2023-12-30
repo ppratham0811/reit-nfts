@@ -1,5 +1,5 @@
 import { Web5 } from "@web5/api";
-import React, { SetStateAction, createContext } from "react";
+import React, { SetStateAction, createContext, useContext } from "react";
 
 interface IDidContext {
   web5: Web5 | null;
@@ -9,3 +9,5 @@ interface IDidContext {
 }
 
 export const DidContext = createContext<IDidContext | null>(null);
+
+export const useDidContext = () => useContext(DidContext);
