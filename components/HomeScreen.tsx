@@ -5,18 +5,9 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { useEffect } from "react";
 import { Web5 } from "@web5/api";
+import { useDidContext } from "@/lib/context/DidContext";
 
 const HomeScreen = () => {
-  async function createUserDID() {
-    const { web5, did: userDid } = await Web5.connect();
-
-    console.log(web5, userDid);
-  }
-
-  useEffect(() => {
-    createUserDID();
-  }, []);
-
   return (
     <main>
       <Image
@@ -24,7 +15,7 @@ const HomeScreen = () => {
         alt="dream-house"
         layout="fill" // Use the layout prop for full-screen coverage
         objectFit="cover" // Crop and scale the image to fill the container
-        className="z-[-100] opacity-40 absolute inset-0" // Position and style the image
+        className="z-[-100] opacity-40 absolute inset-0 h-screen" // Position and style the image
       />
       <Navbar />
 
@@ -41,7 +32,7 @@ const HomeScreen = () => {
         </div>
       </div>
 
-      <div className="flex flex-col justify-center items-center mt-4 font-bold w-full">
+      <div className="flex flex-col justify-center items-center mt-4 md:mt-2 font-bold w-full">
         <div>
           <Button className="my-10 py-6 px-6 text-2xl rounded-full bg-white text-accent text-cyan-600 hover:bg-background hover:text-white">
             <a href="/create">List Property as NFT</a>
@@ -58,7 +49,7 @@ const HomeScreen = () => {
       {/* Featured Properties */}
       {/* Show only top 6 properties */}
       <div>
-        <div className="container relative lg:mt-24 mt-16">
+        <div className="mt-24">
           <div className="grid grid-cols-1 pb-8 text-center">
             <h3 className="my-4 md:text-4xl md:leading-normal text-2xl leading-normal font-semibold">
               Featured Properties
