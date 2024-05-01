@@ -4,6 +4,10 @@ import { ChevronLeft } from "lucide-react";
 import data from "@/data/US_States_and_Cities.json";
 import { useEffect, useState } from "react";
 import getEstimatedPrice from "./GetPrice";
+import { Input } from "@/components/ui/input";
+import { useWalletContext } from "@/lib/context/WalletContext";
+import { useDidContext } from "@/lib/context/DidContext";
+import { ethers } from "ethers";
 
 const allStates = {
   "No State Selected": "",
@@ -70,6 +74,17 @@ const CreateListing = () => {
   const [cities, setCities] = useState<string[]>([]);
   const [city, setCity] = useState("");
   const [rooms, setRooms] = useState("1");
+  const [address, setAddress] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const { walletAddress } = useWalletContext();
+  const didContext = useDidContext();
+  let userDid: string;
+
+  if (didContext) {
+    userDid = didContext.userDid;
+  }
 
   useEffect(() => {
     if (UsState && statesData[UsState]) {
@@ -81,16 +96,16 @@ const CreateListing = () => {
     }
   }, [UsState]);
 
-  const [estimatedPrice, setEstimatedPrice] = useState<Promise<Number | 0> | 0>(
-    0
-  );
+  const [estimatedPrice, setEstimatedPrice] = useState<number>(0);
 
   const handlePriceEstimation = async (e: any) => {
     e.preventDefault();
     const price = await getEstimatedPrice(rooms, city, UsState);
-    // setEstimatedPrice(price);
+    setEstimatedPrice(price);
     console.log(price);
   };
+
+  const verifyAndGenerateNFT = async () => {};
 
   return (
     <div>
@@ -164,14 +179,55 @@ const CreateListing = () => {
             </select>
           </div>
 
-          {/* {estimatedPrice > 0 && (
-            <p>
-              Estimated Price of NFT based on Location and Number of Rooms:{" "}
-              {estimatedPrice}
-            </p>
-          )} */}
+          <div className="grid grid-cols-2 items-center w-full">
+            <label htmlFor="rooms" className="col-span-1 text-left">
+              Enter your name
+            </label>
+            <Input
+              onChange={(e) => setName(e.target.value)}
+              type="text"
+              className="bg-secondary py-2 px-4 col-span-1"
+            />
+          </div>
+          <div className="grid grid-cols-2 items-center w-full">
+            <label htmlFor="rooms" className="col-span-1 text-left">
+              Enter your email
+            </label>
+            <Input
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              className="bg-secondary py-2 px-4 col-span-1"
+            />
+          </div>
+          <div className="grid grid-cols-2 items-center w-full">
+            <label htmlFor="rooms" className="col-span-1 text-left">
+              Enter the address
+            </label>
+            <Input
+              onChange={(e) => setAddress(e.target.value)}
+              type="text"
+              className="bg-secondary py-2 px-4 col-span-1"
+            />
+          </div>
 
-          <Button onClick={handlePriceEstimation} className="w-[30%] mx-auto">
+          {estimatedPrice > 0 && (
+            <>
+              <p>
+                Estimated Price of NFT based on Location and Number of Rooms:
+                {" $"}
+                {estimatedPrice}
+              </p>
+
+              <Button
+                className="w-[40%] mx-auto"
+                onClick={verifyAndGenerateNFT}
+              >
+                Proceed to create NFT
+              </Button>
+            </>
+          )}
+
+          <Button onClick={handlePriceEstimation} className="w-[40%] mx-auto">
             Estimate Price
           </Button>
         </form>
